@@ -11,6 +11,25 @@ res.json({
 });
 });
 
+// Middleware para validar solicitudes POST y PUT en list-edit-router
+listEditRouter.use((req, res, next) => {
+    if ((req.method === 'POST' || req.method === 'PUT') && !req.body) {
+    return res.status(400).json({ error: 'Cuerpo de solicitud vacío' });
+    }
+
+    // Verifica si la solicitud POST tiene información válida
+    if (req.method === 'POST' && (!req.body.nombre || !req.body.descripcion)) {
+    return res.status(400).json({ error: 'Información no válida o atributos faltantes para crear tareas' });
+    }
+
+    // Verifica si la solicitud PUT tiene información válida
+    if (req.method === 'PUT' && (!req.body.nombre || !req.body.descripcion)) {
+    return res.status(400).json({ error: 'Información no válida o atributos faltantes para actualizar tareas' });
+    }
+
+    next();
+});
+
 listEditRouter.delete("/borrar/:id", (req, res) => {
 const id = parseInt(req.params.id);
 const tareaExistente = funcionTareasEditar.buscarTareaPorId(id);

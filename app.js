@@ -10,6 +10,18 @@ app.get("/", (req, res) => {
     res.send("Bienvenido a la aplicacion de Lista de Tareas");
     });
 
+// Middleware para gestionar métodos HTTP válidos en todo el servidor
+app.use((req, res, next) => {
+    const metodosValidos = ['GET', 'POST', 'PUT', 'DELETE']; // Métodos HTTP válidos
+
+    if (!metodosValidos.includes(req.method)) {
+    return res.status(400).json({ error: 'Método HTTP no válido' });
+    }
+
+    next();
+});
+
+
 app.use("/listadetareas", listViewRouter);
 app.use("/editartareas", listEditRouter);
 
